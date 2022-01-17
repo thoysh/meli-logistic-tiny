@@ -2,7 +2,7 @@
 #'
 #' @param nome character: nome da tabela
 #' 
-datatableTy <- function(data, nome, options = NULL, extensions = NULL, rownames = F, selection = "none", dom = "Bfrtip",
+datatableTy <- function(data, nome, escape = F, options = NULL, extensions = NULL, rownames = F, selection = "none", dom = "Bfrtip",
                         preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
                         drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } '),
                         ...) {
@@ -10,6 +10,7 @@ datatableTy <- function(data, nome, options = NULL, extensions = NULL, rownames 
             extensions = c("Buttons", extensions),
             rownames = rownames,
             selection = selection,
+            escape = escape,
             options = append(list(
               ## Internationalisation
               language = list(url = "//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json"),
