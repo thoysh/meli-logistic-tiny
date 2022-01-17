@@ -34,6 +34,7 @@ routeServer <- function(id, RV, rac_routeDB) {
     
     ## OUTPUT Histórico de Rotas
     output$tbl_routeHistoric <- DT::renderDT({
+      RV$upd_route
       req(rac_routeDB())
       df <- rac_routeDB()
       
@@ -101,7 +102,7 @@ routeServer <- function(id, RV, rac_routeDB) {
     
     ## OUTPUT Histórico de Uploaded de Rotas (para verificar rotas importadas)
     output$tbl_routeUploaded <- DT::renderDT({
-      req(rac_routeDB())
+      RV$upd_route
       
       df <- get_routeUploadHistory() %>% 
         arrange(desc(CriadoEm)) %>%

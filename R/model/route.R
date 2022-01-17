@@ -113,9 +113,6 @@ set_route <- function(df, user) {
 
 del_route <- function(data, SC, user) {
   flog.info("Função | %s", as.character(sys.call()[1]))
-  flog.info("data", data, capture = T)
-  flog.info("SC", SC, capture = T)
-  flog.info("user", user, capture = T)
   
   # Connect to the database
   db = mongo(collection = "route",
