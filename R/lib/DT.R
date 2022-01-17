@@ -2,7 +2,7 @@
 #'
 #' @param nome character: nome da tabela
 #' 
-datatableTy <- function(data, nome, options, extensions = NULL, rownames = F, selection = "none", 
+datatableTy <- function(data, nome, options = NULL, extensions = NULL, rownames = F, selection = "none", dom = "Bfrtip",
                         preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
                         drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } '),
                         ...) {
@@ -14,7 +14,7 @@ datatableTy <- function(data, nome, options, extensions = NULL, rownames = F, se
               ## Internationalisation
               language = list(url = "//cdn.datatables.net/plug-ins/1.10.11/i18n/Portuguese-Brasil.json"),
               ## Options
-              dom = "Bfrtip",
+              dom = dom,
               lengthMenu = list(c(10, 25, 50, -1), paste(c("10", "25", "50", "Todas as"), "linhas")),
               ## Buttons
               buttons = list(list(extend = "pageLength", text = "Paginação"),
