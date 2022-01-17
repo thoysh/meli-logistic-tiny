@@ -38,7 +38,8 @@ mainHeader <- dashboardHeader(
 mainSidebar <- dashboardSidebar(
   useShinyjs(),    # Setup shinyjs
   useShinyalert(), # Setup shinyalert
-  sidebarMenu(menuItem("Rotas", icon = icon("folder-open"), tabName = "tabItem_route")
+  sidebarMenu(menuItem("Rotas", icon = icon("route"), tabName = "tabItem_route"),
+              menuItem("Eventos", icon = icon("calendar-alt"), tabName = "tabItem_event")
   )
 )
 
@@ -51,19 +52,19 @@ mainBody <- dashboardBody(
 
   tabItems(
 # Tab Rotas ---------------------------------------------------------------
-    tabItem("tabItem_route", h3("Rotas"),
-            withSpinnerTy(DT::DTOutput("tbl_routeHistoric"))
-    )
+    tabItem("tabItem_route", routeUI("route")),
+# Tab Eventos -------------------------------------------------------------
+    tabItem("tabItem_event", eventUI("event"))
   )
 )
 
 
 # Define a UI ----
-ui <- secure_app(
+ui <- #secure_app(
   dashboardPage(
     mainHeader,
     mainSidebar,
     mainBody,
     skin = "black"
   )
-)
+#)
