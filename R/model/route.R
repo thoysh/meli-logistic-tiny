@@ -1,3 +1,11 @@
+
+#' Converte rotas do Json em Dataframe
+#'
+#' @param fileJson 
+#' @param serviceCenter character: nome do serviceCenter
+#'
+#' @return erro ou dataframe com rotas do json
+#'
 #' @examples
 #' etl_routeJson2Df("tests/route.json", "SDF1")
 etl_routeJson2Df <- function(fileJson, serviceCenter) {
@@ -54,19 +62,8 @@ get_route <- function() {
   # Read entries
   df <- db$find(query = '{ "RemovidoEm": null }')
   if (ncol(df) == 0) return(NULL)
-  df
-}
-
-
-get_routeByData <- function(data) {
-  flog.info("Função | %s", as.character(sys.call()[1]))
-  
-  # Connect to the database
-  db = mongo(collection = "route",
-             db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
-  # Read entries
-  df <- db$find(query  = paste0('{ "Data": { "$eq": "', as.character(data), '" } }'))
-  if (ncol(df) == 0) return(NULL)
+  if ("Data" %in% names(df))
+    df$Data <- df$Data %>% as.Date()
   df
 }
 
@@ -91,6 +88,8 @@ get_routeUploadHistory <- function() {
                                        '      "_id": "$_id._id"', 
                                        ' }}]'))
   if (ncol(df) == 0) return(NULL)
+  if ("Data" %in% names(df))
+    df$Data <- df$Data %>% as.Date()
   df
 }
 
@@ -111,6 +110,33 @@ set_route <- function(df, user) {
 }
 
 
+validate_del_route <- function(data, SC) {
+  flog.info("Função | %s", as.character(sys.call()[1]))
+  
+  # Connect to the database
+  db = mongo(collection = "event",
+             db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
+  # Read entries
+  df <- db$aggregate(pipeline = paste0('[{ "$match": { "RemovidoEm": null } },',
+                                       ' { "$lookup": {',
+                                       '      "from": "route",',
+                                       '      "localField": "Rota",',
+                                       '      "foreignField": "Rota",',
+                                       '      "pipeline": [{ "$match": {',
+                                       '                        "Data": { "$eq": "', as.character(data), '" },',
+                                       '                        "SC": { "$eq": "', SC, '" },',
+                                       '                        "RemovidoEm": null',
+                                       '                   }}],',
+                                       '      "as": "childs"',
+                                       ' }},',
+                                       ' { "$match": { "childs": { "$ne": [] } } }',
+                                       ' ]'))
+  
+  if (ncol(df) == 0) return(NULL)
+  df
+}
+
+
 del_route <- function(data, SC, user) {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -124,5 +150,17 @@ del_route <- function(data, SC, user) {
                   update = paste0('{ "$set": { "RemovidoPor": "', user, '" },',
                                   '  "$currentDate": { "RemovidoEm": true } }'),
                   multiple = T)
+  df
+}
+
+
+drop_route <- function() {
+  flog.info("Função | %s", as.character(sys.call()[1]))
+  
+  # Connect to the database
+  db = mongo(collection = "route",
+             db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
+  # Read entries
+  df <- db$remove(query = '{}')
   df
 }
