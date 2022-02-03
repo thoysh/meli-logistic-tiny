@@ -11,16 +11,28 @@ server <- function(input, output, session) {
   
   RV <- reactiveValues()
   RV$user <- "teste" #auth$user
+  RV$upd_route <- 0
+  RV$upd_event <- 0
+  RV$upd_driver <- 0
 
   rac_routeDB <- reactive({
     RV$upd_route
-    df <- get_route()
-    if ("Data" %in% names(df))
-      df$Data <- df$Data %>% as.Date()
-    df
+    get_route()
   })
   
-# Tab Rotas ---------------------------------------------------------------
-  routeServer("route", RV, rac_routeDB)
+  rac_eventDB <- reactive({
+    RV$upd_event
+    get_event()
+  })
   
+  rac_driverDB <- reactive({
+    RV$upd_driver
+    get_driver()
+  })
+  
+  callModule(module = routeServer,  "route", RV, rac_routeDB)
+  callModule(module = eventServer,  "event", RV, rac_routeDB, rac_eventDB)
+  callModule(module = driverServer, "driver", RV, rac_driverDB)
+  callModule(module = reportServer, "report", RV)
+
 }

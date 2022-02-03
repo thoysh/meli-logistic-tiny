@@ -39,7 +39,10 @@ mainSidebar <- dashboardSidebar(
   useShinyjs(),    # Setup shinyjs
   useShinyalert(), # Setup shinyalert
   sidebarMenu(menuItem("Rotas", icon = icon("route"), tabName = "tabItem_route"),
-              menuItem("Eventos", icon = icon("calendar-alt"), tabName = "tabItem_event")
+              menuItem("Eventos", icon = icon("calendar-alt"), tabName = "tabItem_event"),
+              menuItem("Relatórios", icon = icon("file-invoice-dollar"), tabName = "tabItem_report"),
+              menuItem("Extratos", icon = icon("receipt"), tabName = "tabItem_extract"),
+              menuItem("Motoristas", icon = icon("car-side"), tabName = "tabItem_driver")
   )
 )
 
@@ -51,10 +54,10 @@ mainBody <- dashboardBody(
   ),
 
   tabItems(
-# Tab Rotas ---------------------------------------------------------------
     tabItem("tabItem_route", routeUI("route")),
-# Tab Eventos -------------------------------------------------------------
-    tabItem("tabItem_event", eventUI("event"))
+    tabItem("tabItem_event", eventUI("event")),
+    tabItem("tabItem_driver", driverUI("driver")),
+    tabItem("tabItem_report", reportUI("report"))
   )
 )
 
