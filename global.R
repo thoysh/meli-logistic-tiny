@@ -7,3 +7,5 @@ credentials <- data.frame(
   admin = c(FALSE, TRUE),
   stringsAsFactors = FALSE
 )
+
+timezoneTy <- "America/Sao_Paulo"
