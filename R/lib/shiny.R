@@ -1,8 +1,8 @@
 #' Cria botões html nas tabelas
 #'
-#' @param FUN função shiny 
-#' @param vetId vetor da coluna que será identificador
-#' @param nomeId nome do identificador do html (sem hífen) 
+#' @param FUN function: função shiny 
+#' @param vetId character: vetor da coluna que será identificador
+#' @param nomeId character:nome do identificador do html (sem hífen) 
 #'
 #' @examples
 #' fshinySetInput(actionButton, df$ID, "btnDo", 

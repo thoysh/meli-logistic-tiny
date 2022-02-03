@@ -32,6 +32,7 @@ datatableTy <- function(data, nome, escape = F, options = NULL, extensions = NUL
             )
 }
 
+
 #' Define columnDefs para substrings na coluna da tabela
 #'
 #' @param coluna numeric: número da coluna começando em 0

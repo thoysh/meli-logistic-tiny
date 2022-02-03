@@ -1,6 +1,6 @@
 #' Configura e cria o arquivo log 
 #'
-#' @param threshold limiar de rastreamento do log
+#' @param threshold threshold: limiar de rastreamento do log
 #' @examples
 #' setupFutilelogger(TRACE)
 #' 
