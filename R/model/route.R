@@ -1,7 +1,6 @@
-
-#' Converte rotas do Json em Dataframe
+#' Converte rotas do json em dataframe
 #'
-#' @param fileJson 
+#' @param fileJson character: caminho do arquivo
 #' @param SC character: nome do serviceCenter
 #'
 #' @return dataframe com rotas do json
@@ -147,7 +146,6 @@ set_route <- function(df, user) {
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Insert the data into the mongo collection as a data.frame
   lst <- db$insert(df)
-  lst
 }
 
 
@@ -204,7 +202,6 @@ del_route <- function(data, SC, user) {
                    update = paste0('{ "$set": { "RemovidoPor": "', user, '" },',
                                    '  "$currentDate": { "RemovidoEm": true } }'),
                    multiple = T)
-  lst
 }
 
 
@@ -219,5 +216,4 @@ drop_route <- function() {
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Read entries
   bool <- db$remove(query = '{}')
-  bool
 }

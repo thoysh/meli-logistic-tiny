@@ -1,4 +1,9 @@
-
+#' Converte motoristas do excel em dataframe
+#'
+#' @param fileExcel character: caminho do arquivo
+#'
+#' @return dataframe com motoristas do excel
+#'
 #' @examples
 #' etl_driverXlsx2Df("tests/motoristas.xlsx")
 etl_driverXlsx2Df <- function(fileExcel) {
@@ -37,6 +42,10 @@ etl_driverXlsx2Df <- function(fileExcel) {
   df
 }
 
+
+#' Get motoristas
+#'
+#' @return dataframe de motoristas não-removidos
 get_driver <- function() {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -50,6 +59,12 @@ get_driver <- function() {
 }
 
 
+#' Set motoristas
+#'
+#' @param df dataframe: dataframe para salvar no BD
+#' @param user character: nome do usuário
+#'
+#' @return List(nInserted, nMatched, nRemoved, nUpserted, writeErrors)
 set_driver <- function(df, user) {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -62,10 +77,13 @@ set_driver <- function(df, user) {
   db = mongo(collection = "driver",
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Insert the data into the mongo collection as a data.frame
-  db$insert(df)
+  lst <- db$insert(df)
 }
 
 
+#' Drop collection de motoristas
+#'
+#' @return T
 drop_driver <- function() {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -73,6 +91,5 @@ drop_driver <- function() {
   db = mongo(collection = "driver",
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Read entries
-  df <- db$remove(query = '{}')
-  df
+  bool <- db$remove(query = '{}')
 }

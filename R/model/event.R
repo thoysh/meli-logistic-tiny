@@ -13,6 +13,10 @@ vec_eventDiscountType <- c("Abandono de Rota",
                            "PNR",
                            "Outros (Inclua informações adicionais")
 
+
+#' Get eventos
+#'
+#' @return dataframe de eventos não-removidas
 get_event <- function() {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -29,6 +33,12 @@ get_event <- function() {
 }
 
 
+#' Set eventos
+#'
+#' @param df dataframe: dataframe para salvar no BD
+#' @param user character: nome do usuário
+#'
+#' @return List(nInserted, nMatched, nRemoved, nUpserted, writeErrors)
 set_event <- function(df, user) {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -41,10 +51,16 @@ set_event <- function(df, user) {
   db = mongo(collection = "event",
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Insert the data into the mongo collection as a data.frame
-  db$insert(df)
+  lst <- db$insert(df)
 }
 
 
+#' Deleta (Atualiza) evento com status de remoção
+#'
+#' @param id character: id do evento
+#' @param user character: nome do usuário
+#'
+#' @return List(modifiedCount, matchedCount, upsertedCount)
 del_event <- function(id, user) {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -52,15 +68,17 @@ del_event <- function(id, user) {
   db = mongo(collection = "event",
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Read entries
-  df <- db$update(query  = paste0('{ "_id": { "$oid": "', id, '" },',
-                                  '  "RemovidoEm": null }'),
-                  update = paste0('{ "$set": { "RemovidoPor": "', user, '" },',
-                                  '  "$currentDate": { "RemovidoEm": true } }'),
-                  multiple = F)
-  df
+  lst <- db$update(query  = paste0('{ "_id": { "$oid": "', id, '" },',
+                                   '  "RemovidoEm": null }'),
+                   update = paste0('{ "$set": { "RemovidoPor": "', user, '" },',
+                                   '  "$currentDate": { "RemovidoEm": true } }'),
+                   multiple = F)
 }
 
 
+#' Drop collection de eventos
+#'
+#' @return T
 drop_event <- function() {
   flog.info("Função | %s", as.character(sys.call()[1]))
   
@@ -68,6 +86,5 @@ drop_event <- function() {
   db = mongo(collection = "event",
              db = Sys.getenv("MONGO_DB"), url = Sys.getenv("MONGO_URL"))
   # Read entries
-  df <- db$remove(query = '{}')
-  df
+  bool <- db$remove(query = '{}')
 }
